@@ -17,6 +17,7 @@
 | Skill | Install | Description |
 | ----- | ------- | ----------- |
 | [whitechain-dev](./whitechain-dev/SKILL.md) | `npx skills add whitechain-labs/skills --skill whitechain-dev` | Whitechain developer playbook: network config, contract deployment, Blockscout verification, testnet faucet, and running a node. |
+| [whitechain-analytics](./whitechain-analytics/SKILL.md) | `npx skills add whitechain-labs/skills --skill whitechain-analytics` | Read public Blockscout / RPC / GraphQL without keys: error handling, rate limits, BigInt wei, chain IDs, Soul wording. |
 
 ## Installation
 
@@ -24,6 +25,7 @@ Install with [Vercel's Skills CLI](https://skills.sh):
 
 ```bash
 npx skills add whitechain-labs/skills --skill whitechain-dev
+npx skills add whitechain-labs/skills --skill whitechain-analytics
 ```
 
 ## Usage
