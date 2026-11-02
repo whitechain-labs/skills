@@ -4,11 +4,15 @@ description: >
   Whitechain developer playbook. Use for any task involving Whitechain development on testnet:
   connect to whitechain, add whitechain network to wallet, whitechain RPC url, whitechain chain ID,
   deploy contract to whitechain, compile solidity, forge deploy, deploy to whitechain testnet,
-  create ERC-20 on whitechain, create NFT on whitechain, verify contract on whitechain,
+  create ERC-20 on whitechain, create NFT on whitechain, token template, verify contract on whitechain,
   submit source code to blockscout, verify on blockscout, get testnet WBT, claim faucet,
-  I need test tokens, run whitechain node, self-hosted RPC, run full node.
-  Do not use this skill for transferring tokens, swapping, signing messages, or bridging —
-  these are not yet supported (planned for a separate end-user MCP skill).
+  I need test tokens, run whitechain node, self-hosted RPC, run full node, test contract,
+  fork test, fuzz test, security review, audit checklist, before mainnet, L1 data fee,
+  transaction finality, OP Stack, predeploy, how the bridge works, custom gas token,
+  check balance, transaction status, why did my transaction revert, fee breakdown, network status.
+  Do not use this skill for transferring tokens, swapping, signing messages, or executing bridge
+  transfers (explaining how the bridge works is in scope) — these are not yet supported
+  (planned for a separate end-user MCP skill).
 ---
 
 # Whitechain developer playbook
@@ -18,10 +22,15 @@ description: >
 | Task | Trigger phrases | Reference |
 |---|---|---|
 | Connect wallet / network config | "connect to whitechain", "add network to wallet", "what's the RPC", "chain ID" | references/network.md |
-| Deploy a contract | "deploy contract", "compile and deploy", "create ERC-20", "create NFT", "forge deploy" | references/deploy-contract.md |
+| Write a token contract | "create ERC-20", "create NFT", "token template", "foundry.toml for whitechain" | references/contract-templates.md |
+| Test a contract | "test my contract", "fork test", "fuzz test", "estimate fees" | references/testing.md |
+| Review contract security | "security review", "audit checklist", "before mainnet", "is this safe" | references/security.md |
+| Deploy a contract | "deploy contract", "compile and deploy", "forge deploy" | references/deploy-contract.md |
+| Investigate | "check balance", "did my transaction succeed", "why did it revert", "how much did I pay", "is it final", "is the network up" | references/investigate.md |
 | Verify a contract | "verify contract", "submit source code", "verify on blockscout" | references/verify-contract.md |
 | Get testnet WBT | "get testnet WBT", "claim faucet", "I need test tokens" | references/claim-testnet-wbt.md |
 | Run a node | "run whitechain node", "self-hosted RPC", "run full node" | references/run-node.md |
+| L2 behavior | "L1 data fee", "finality", "safe/finalized", "predeploy", "how does the bridge work", "custom gas token" | references/l2-specifics.md |
 
 ## Developer context
 
@@ -38,10 +47,12 @@ skill. A dedicated end-user MCP skill for those flows is planned but not yet bui
 | --- | --- |
 | Name | Whitechain Sepolia |
 | Chain ID | `1874` |
+| Type | OP Stack L2 on Ethereum Sepolia, Custom Gas Token mode |
 | RPC | `https://rpc.testnet.whitechain.io` |
 | Explorer | `https://explorer.testnet.whitechain.io` |
 | Blockscout API | `https://explorer.testnet.whitechain.io/api/v2` |
-| Native token | WBT |
+| Native token | WBT (not ETH) |
+| Compiler target | `solc = "0.8.30"`, `evm_version = "prague"` |
 
 All operations target Whitechain Sepolia testnet.
 
@@ -55,7 +66,7 @@ All operations target Whitechain Sepolia testnet.
 
 ## Operating procedure
 
-1. **Classify the task** using the routing table above
+1. **Classify the task** using the routing table above. A new token goes through templates → testing → deploy, in that order
 2. **Read the relevant reference** before implementing — don't rely on memory of the API shape
 3. **Validate inputs** per the reference's Input validation section before building any shell command
 4. **Implement**, showing a summary and waiting for confirmation before any write or signing step

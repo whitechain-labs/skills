@@ -16,7 +16,7 @@
 
 | Skill | Install | Description |
 | ----- | ------- | ----------- |
-| [whitechain-dev](./whitechain-dev/SKILL.md) | `npx skills add whitechain-labs/skills --skill whitechain-dev` | Whitechain developer playbook: network config, contract deployment, Blockscout verification, testnet faucet, and running a node. |
+| [whitechain-dev](./whitechain-dev/SKILL.md) | `npx skills add whitechain-labs/skills --skill whitechain-dev` | Whitechain developer playbook: network config, tested ERC-20/ERC-721 templates, testing and security guides, OP Stack L2 specifics (fees, finality, bridge), read-only investigation (balances, transactions, revert reasons), contract deployment, Blockscout verification, testnet faucet, and running a node. |
 
 ## Installation
 
@@ -46,6 +46,14 @@ Verify my contract on Blockscout
 
 ```text
 Get me some testnet WBT
+```
+
+```text
+Create an ERC-20 on Whitechain, test it, and deploy it
+```
+
+```text
+Run a security review on my contract before mainnet
 ```
 
 ## What is a skill?
