@@ -5,9 +5,10 @@ verify on Blockscout in the same command.
 
 ## Prerequisites
 
-1. A Foundry project (`forge init` if none exists) with the contract under `src/`
+1. A Foundry project (`forge init` if none exists) with the contract under `src/`, and `solc` / `evm_version = "prague"` pinned in `foundry.toml` — see [contract-templates.md](contract-templates.md#1-project-setup). For tokens, start from the tested templates there instead of writing ERC-20/721 logic from scratch
 2. A signer imported into Foundry's encrypted keystore — **never pass a raw private key on the command line**
 3. Test WBT in the signer's address — see [claim-testnet-wbt.md](claim-testnet-wbt.md)
+4. Tests passing — see [testing.md](testing.md), including the live-node `cast estimate --create` pre-flight
 
 ## Security
 
