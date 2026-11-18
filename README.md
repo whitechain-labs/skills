@@ -30,6 +30,8 @@ npx skills add whitechain-labs/skills --skill whitechain-dev
 
 Skills are automatically available once installed. The agent will use them when relevant tasks are detected.
 
+`whitechain-dev` works on Whitechain Sepolia testnet by default. It uses Whitechain Mainnet only when you name Mainnet in the request, and it asks for an explicit Mainnet confirmation before any deployment or contract call there.
+
 **Examples:**
 
 ```text
@@ -38,6 +40,10 @@ Deploy my contract to Whitechain Sepolia
 
 ```text
 How do I connect to Whitechain testnet?
+```
+
+```text
+Deploy my contract to Whitechain Mainnet
 ```
 
 ```text

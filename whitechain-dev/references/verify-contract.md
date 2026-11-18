@@ -2,6 +2,17 @@
 
 Submit Solidity source code for verification on the Blockscout explorer.
 
+Use the explorer of the network the contract is deployed on:
+
+| Network | Blockscout base URL |
+| --- | --- |
+| Whitechain Sepolia (default) | `https://explorer.testnet.whitechain.io` |
+| Whitechain Mainnet | `https://explorer.whitechain.io` |
+
+The examples below use Sepolia. For a Mainnet contract, replace the base URL with
+`https://explorer.whitechain.io`. Verification sends no transaction, so it needs no Mainnet
+confirmation, but always say which network you verified on.
+
 ## Input validation
 
 Validate all user-provided values before constructing the verification request.
@@ -21,7 +32,7 @@ If any input fails validation, stop and ask the user to correct it. Do not sanit
 
 | Input | Description |
 | --- | --- |
-| Contract address | Deployed address on Whitechain |
+| Contract address | Deployed address on Whitechain Sepolia or Whitechain Mainnet |
 | Contract name | Exact contract name as declared in the source (e.g. `Storage`) |
 | Solidity source | Full source file(s) |
 | Compiler version | Must match the version used at deploy (e.g. `v0.8.28`) |
