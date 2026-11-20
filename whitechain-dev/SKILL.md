@@ -3,7 +3,7 @@ name: whitechain-dev
 description: >
   Whitechain developer playbook. Use for any task involving Whitechain development on
   Whitechain Sepolia testnet (default) or Whitechain Mainnet (only when the user names it):
-  connect to whitechain, add whitechain network to wallet, whitechain RPC url, ankr whitechain RPC, whitechain chain ID,
+  connect to whitechain, add whitechain network to wallet, whitechain RPC url, whitechain chain ID,
   whitechain mainnet, chain ID 1875, deploy to whitechain mainnet,
   deploy contract to whitechain, compile solidity, forge deploy, deploy to whitechain testnet,
   create ERC-20 on whitechain, create NFT on whitechain, verify contract on whitechain,
@@ -40,7 +40,6 @@ skill. A dedicated end-user MCP skill for those flows is planned but not yet bui
 | --- | --- | --- |
 | Chain ID | `1874` | `1875` |
 | RPC | `https://rpc.testnet.whitechain.io` | `https://rpc.whitechain.io` |
-| Alternative RPC (Ankr) | `https://rpc.ankr.com/whitechain_testnet` | `https://rpc.ankr.com/whitechain` |
 | Explorer | `https://explorer.testnet.whitechain.io` | `https://explorer.whitechain.io` |
 | Blockscout API | `https://explorer.testnet.whitechain.io/api/v2` | `https://explorer.whitechain.io/api/v2` |
 | Native token | WBT (test, from the faucet) | WBT (real value, no faucet) |
