@@ -1,6 +1,6 @@
 # Run a Whitechain node
 
-Deploy an external Whitechain RPC node that follows the canonical L2 chain over L1 derivation and P2P. Use this when a team needs its own RPC endpoint, an indexer or explorer backend, or a private node instead of the public RPC. Testnet only for now; mainnet ships at launch.
+Deploy an external Whitechain RPC node that follows the canonical L2 chain over L1 derivation and P2P. Use this when a team needs its own RPC endpoint, an indexer or explorer backend, or a private node instead of the public RPC. Available for Whitechain Sepolia (default) and Whitechain Mainnet. Set up a Mainnet node only when the user names Mainnet.
 
 Source: [`whitechain-labs/node`](https://github.com/whitechain-labs/node), a standalone Docker Compose stack.
 
@@ -30,9 +30,16 @@ The stack ships three profiles, picked with `PROFILE=<profile>` or a per-profile
 
 ## Steps
 
-1. Get the `public-rpc-node` manifests, place `genesis.json` and `rollup.json` under `artifacts/testnet/`.
-2. `cp .env.testnet.example .env`, then fill `PUBLIC_IP`, `WHITECHAIN_PUBLIC_RPC`, `L1_RPC_URL`, `L1_BEACON_URL`, and (for `full-snap-node`) `WHITECHAIN_RETH_TRUSTED_PEERS`.
-3. `L1_RPC_URL`/`L1_BEACON_URL` need your own Ethereum Sepolia RPC and Beacon API endpoints. `op-node` reads L1 batches through the RPC and blob data (EIP-4844) through the Beacon API, so a regular execution-only endpoint is not enough. Confirm both respond before filling in `.env`.
+| | Whitechain Sepolia (default) | Whitechain Mainnet |
+| --- | --- | --- |
+| Artifacts folder (`WHITECHAIN_NETWORK`) | `artifacts/testnet/` | `artifacts/mainnet/` |
+| Env example | `.env.testnet.example` | `.env.mainnet.example` |
+| L1 chain for `L1_RPC_URL` / `L1_BEACON_URL` | Ethereum Sepolia | Ethereum mainnet |
+| Values from the Whitechain team | None, the example ships with working values | Request them from the Whitechain team (for example `WHITECHAIN_RETH_TRUSTED_PEERS`) |
+
+1. Get the `public-rpc-node` manifests, then copy `genesis.json` and `rollup.json` for the chosen network from [`whitechain-labs/whitechain-bootstrap`](https://github.com/whitechain-labs/whitechain-bootstrap) into the artifacts folder above, and compare their SHA-256 against the hashes published there. The Mainnet genesis ships compressed: run `unzip mainnet/genesis.json.zip -d mainnet/` first.
+2. Copy the env example for the network to `.env`, then fill `PUBLIC_IP`, `WHITECHAIN_PUBLIC_RPC`, `L1_RPC_URL`, `L1_BEACON_URL`, and (for `full-snap-node`) `WHITECHAIN_RETH_TRUSTED_PEERS`.
+3. `L1_RPC_URL`/`L1_BEACON_URL` need your own RPC and Beacon API endpoints on the L1 chain from the table above. `op-node` reads L1 batches through the RPC and blob data (EIP-4844) through the Beacon API, so a regular execution-only endpoint is not enough. Confirm both respond before filling in `.env`.
 4. Start the profile: `make up-full-snap-node` (or `up-full-node` / `up-archive-node`). This validates `.env` and the artifacts, generates `keys/jwt.txt` if missing, and runs `docker compose --profile <profile> up -d`.
 5. Confirm the node responds:
 

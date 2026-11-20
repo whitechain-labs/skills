@@ -2,6 +2,10 @@
 
 Guide the user through claiming test WBT from the Whitechain Sepolia faucet.
 
+There is no faucet on Whitechain Mainnet. Mainnet WBT has real value: the user gets it from
+WhiteBIT or another holder, see https://docs.whitechain.io/learn/general/get-wbt. Never offer
+the testnet faucet as a way to fund a Mainnet address.
+
 The faucet requires GitHub OAuth and a captcha. This skill cannot claim autonomously.
 
 ## Input validation

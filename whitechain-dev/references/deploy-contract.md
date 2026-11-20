@@ -1,13 +1,13 @@
 # Deploy a contract on Whitechain
 
-Compile with Foundry, deploy to Whitechain Sepolia via an encrypted keystore, and optionally
-verify on Blockscout in the same command.
+Compile with Foundry, deploy to Whitechain Sepolia (default) or Whitechain Mainnet via an encrypted
+keystore, and optionally verify on Blockscout in the same command.
 
 ## Prerequisites
 
 1. A Foundry project (`forge init` if none exists) with the contract under `src/`
 2. A signer imported into Foundry's encrypted keystore — **never pass a raw private key on the command line**
-3. Test WBT in the signer's address — see [claim-testnet-wbt.md](claim-testnet-wbt.md)
+3. WBT in the signer's address for gas — test WBT on Sepolia (see [claim-testnet-wbt.md](claim-testnet-wbt.md)), real WBT on Mainnet (no faucet)
 
 ## Security
 
@@ -15,6 +15,7 @@ verify on Blockscout in the same command.
 - **Never attempt to run keystore-signing commands from the agent's own shell** — `cast wallet import`, `cast wallet address --account <name>`, and `forge create --account` all require an interactive TTY for the password prompt, which the agent's shell tool cannot provide; hand the exact command to the user to run in their own terminal
 - **Treat a dry run as a failed deploy, not a completed one** — without `--broadcast`, `forge create` only simulates and prints a transaction-shaped result while sending nothing on-chain
 - **Never skip the deployment summary and confirmation step** — a mined deployment cannot be undone
+- **Never deploy to Mainnet without the explicit Mainnet confirmation** — see step 4. A Sepolia confirmation, or a plain "yes", does not count
 
 ## Input validation
 
@@ -32,8 +33,20 @@ If any input fails validation, stop and ask the user to correct it. Do not sanit
 
 ### 1. Confirm the target network
 
-This skill deploys to Whitechain Sepolia testnet only. If the user asks for a different network,
-tell them only testnet is supported in this version and stop.
+Deploy to Whitechain Sepolia unless the user explicitly named Whitechain Mainnet ("mainnet",
+"Whitechain Mainnet", or chain ID `1875`). If the target is unclear, ask and default to Sepolia.
+For any other network, tell the user only Whitechain Sepolia and Whitechain Mainnet are supported and stop.
+
+| | Whitechain Sepolia (default) | Whitechain Mainnet |
+| --- | --- | --- |
+| `--rpc-url` | `https://rpc.testnet.whitechain.io` | `https://rpc.whitechain.io` |
+| `--verifier-url` | `https://explorer.testnet.whitechain.io/api/` | `https://explorer.whitechain.io/api/` |
+| Explorer | `https://explorer.testnet.whitechain.io` | `https://explorer.whitechain.io` |
+| Chain ID | `1874` | `1875` |
+
+The commands below use the Sepolia values. For Mainnet, replace them with the Mainnet column.
+Mainnet caps a single transaction at 16,777,216 gas, so a deployment that passes on Sepolia can
+still fail on Mainnet.
 
 ### 2. Set up the signer
 
@@ -67,6 +80,21 @@ Account:   <account-name>
 Verify:    Yes (Blockscout)
 
 Confirm? (yes / no)
+```
+
+For Mainnet, show this summary instead and wait for an explicit Mainnet confirmation, such as
+"yes, deploy to mainnet". A plain "yes" is not enough:
+
+```
+MAINNET deployment summary
+───────────────────
+Contract:  src/MyContract.sol:MyContract
+Network:   Whitechain Mainnet (chain ID 1875)
+Account:   <account-name>
+Verify:    Yes (Blockscout)
+Cost:      gas is paid in real WBT; a mined deployment cannot be undone
+
+Type "yes, deploy to mainnet" to continue, or "no" to cancel.
 ```
 
 ### 5. Deploy
@@ -112,16 +140,18 @@ see [verify-contract.md](verify-contract.md).
 `forge create` only covers "deploy one contract, nothing else." If the task needs multiple
 contracts wired together or a post-deploy call (e.g. `initialize()`), use a `forge script` deploy
 script (`vm.startBroadcast()` / `vm.stopBroadcast()`) instead — see the official
-[Deploy with Foundry](https://docs.whitechain.io/getting-started/quick-start/deploy_with_foundry)
+[Deploy with Foundry](https://docs.whitechain.io/build/deploy/deploy-with-foundry)
 guide for the pattern. It also requires `--broadcast`, with the same silent-dry-run behavior.
 
 ### 6. Return the result
 
 ```
-Deployed. Contract address: 0x...
+Deployed on Whitechain Sepolia. Contract address: 0x...
 Transaction: 0x...
 Explorer: https://explorer.testnet.whitechain.io/address/0x...
 ```
+
+On Mainnet, name Whitechain Mainnet and use `https://explorer.whitechain.io/address/0x...`.
 
 ## Error handling
 
@@ -130,7 +160,7 @@ Explorer: https://explorer.testnet.whitechain.io/address/0x...
 | `Device not configured (os error 6)` | Agent's shell has no TTY to prompt for the keystore password | Hand the exact command to the user to run in their own terminal — do not attempt to run keystore-signed commands directly. |
 | "Dry run enabled, not broadcasting transaction" in the output | `--broadcast` was omitted | Nothing was deployed. Re-run the same command with `--broadcast` added. |
 | Compilation error | Syntax error or wrong solc version pinned in `foundry.toml` | Show the compiler error. Ask the user to fix the source or the pinned version. |
-| `insufficient funds for gas` | Signer address has no test WBT | Direct the user to [claim-testnet-wbt.md](claim-testnet-wbt.md). |
+| `insufficient funds for gas` | Signer address has no WBT | On Sepolia, direct the user to [claim-testnet-wbt.md](claim-testnet-wbt.md). On Mainnet there is no faucet: the user funds the address with real WBT. |
 | `nonce too low` / `already used` | Concurrent deploy from the same account | Retry — `forge create` refetches the nonce. |
 | Deployment reverted | Constructor error | Show the revert reason. |
 | Verification fails via `--verify` | Verifier endpoint unreachable or compiler settings mismatch | Retry with manual submission — see [verify-contract.md](verify-contract.md). |
